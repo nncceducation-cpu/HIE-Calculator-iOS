@@ -38,13 +38,13 @@ workflows:
       - name: Set up code signing
         script: |
           keychain initialize
-          # The existing distribution certificates' private keys live on another
-          # Mac, so generate a fresh distribution certificate here.
-          app-store-connect create-certificate \
-            --type IOS_DISTRIBUTION \
-            --save
+          # No existing certificate private key is available on this machine, so
+          # generate one and let fetch-signing-files create a fresh iOS
+          # distribution certificate + provisioning profile from it.
+          openssl genrsa -out /tmp/dist_cert_key.pem 2048
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
             --type IOS_APP_STORE \
+            --certificate-key=@file:/tmp/dist_cert_key.pem \
             --create
           keychain add-certificates
           xcode-project use-profiles
