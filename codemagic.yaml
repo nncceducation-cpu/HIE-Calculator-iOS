@@ -27,6 +27,9 @@ workflows:
         script: |
           npx cap add ios || true
           npx cap sync ios
+          # Capacitor forbids dashes in appId, but the App Store bundle id is
+          # com.HIE-Calc — force it into the generated Xcode project.
+          sed -i '' 's/PRODUCT_BUNDLE_IDENTIFIER = [^;]*;/PRODUCT_BUNDLE_IDENTIFIER = com.HIE-Calc;/g' ios/App/App.xcodeproj/project.pbxproj
       - name: Set version and build number
         script: |
           cd ios/App
