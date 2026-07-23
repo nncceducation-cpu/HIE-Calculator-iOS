@@ -1,0 +1,50 @@
+workflows:
+  ios-capacitor:
+    name: HIE Calculator iOS
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    integrations:
+      # This name MUST exactly match the App Store Connect API key you add in
+      # Codemagic  →  Teams / User settings  →  Integrations  →  App Store Connect.
+      app_store_connect: AppStoreConnectKey
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.HIE-Calc
+      vars:
+        BUNDLE_ID: "com.HIE-Calc"
+        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"
+      node: 20
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Prepare web assets
+        script: |
+          mkdir -p www
+          cp index.html www/index.html
+      - name: Install npm dependencies
+        script: npm install
+      - name: Generate the iOS project
+        script: |
+          npx cap add ios || true
+          npx cap sync ios
+      - name: Set version and build number
+        script: |
+          cd ios/App
+          agvtool new-marketing-version 2.0
+          agvtool new-version -all "$BUILD_NUMBER"
+      - name: Set up code signing
+        script: xcode-project use-profiles
+      - name: Build the signed IPA
+        script: |
+          xcode-project build-ipa \
+            --workspace "$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true

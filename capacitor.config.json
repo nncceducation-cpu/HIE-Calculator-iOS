@@ -1,0 +1,8 @@
+{
+  "appId": "com.HIE-Calc",
+  "appName": "HIE Calculator",
+  "webDir": "www",
+  "server": {
+    "iosScheme": "https"
+  }
+}
