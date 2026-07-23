@@ -130,8 +130,16 @@
     <h3>aEEG Background Patterns</h3>
     <div class="msg">
       <div class="fig">
-        <img src="aeeg-patterns.jpg" onerror="this.onerror=null;this.src='https://media.springernature.com/lw685/springer-static/image/chp%3A10.1007%2F978-3-031-55972-3_16/MediaObjects/502523_1_En_16_Fig2_HTML.jpg';"
+        <img src="aeeg-patterns.jpg"
+             onerror="if(this.dataset.step==='remote'){this.style.display='none';document.getElementById('aeegTextFallback').style.display='block';}else{this.dataset.step='remote';this.src='https://media.springernature.com/lw685/springer-static/image/chp%3A10.1007%2F978-3-031-55972-3_16/MediaObjects/502523_1_En_16_Fig2_HTML.jpg';}"
              alt="aEEG background patterns: continuous (C), discontinuous (DC), burst-suppression (BS), low voltage (LV), and inactive/flat (FT), with their amplitude criteria.">
+        <div id="aeegTextFallback" style="display:none;font-size:13px;line-height:1.55;padding:4px 2px;">
+          <b>Continuous (C):</b> lower amplitude &gt; 5 µV; maximum &gt; 10 µV<br>
+          <b>Discontinuous (DC):</b> lower amplitude &lt; 5 µV; maximum &gt; 10 µV<br>
+          <b>Burst-suppression (BS):</b> minimum amplitude without variability ≤ 2 µV, with bursts &gt; 25 µV<br>
+          <b>Low voltage (LV):</b> lower amplitude &lt; 5 µV; maximum &lt; 10 µV<br>
+          <b>Inactive, flat (FT):</b> primarily inactive (isoelectric tracing), background &lt; 5 µV
+        </div>
       </div>
       <div class="figcap">Fig. 16.2 — Common classification used to describe aEEG tracing, especially in term infants: continuous (C) with SWC, discontinuous (DC), burst suppression (BS), low voltage (LV), and inactive, flat trace (FT).</div>
       <div class="cite">
