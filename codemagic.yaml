@@ -38,6 +38,11 @@ workflows:
       - name: Set up code signing
         script: |
           keychain initialize
+          # The existing distribution certificates' private keys live on another
+          # Mac, so generate a fresh distribution certificate here.
+          app-store-connect create-certificate \
+            --type IOS_DISTRIBUTION \
+            --save
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
             --type IOS_APP_STORE \
             --create
