@@ -279,7 +279,7 @@
     txt += summary();
 
     // Override only when the gate is the sole barrier (the infant would otherwise qualify).
-    const color = (o.kind === 'qualify') ? GREEN : o.color;
+    const color = AMBER; // gate-driven non-qualification shows an orange band
     showAlert('Result', txt, o.kind === 'qualify', color, 'DOES NOT QUALIFY');
   }
 
