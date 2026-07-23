@@ -65,3 +65,39 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
+
+  android-capacitor:
+    name: HIE Calculator Android
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      android_signing:
+        # This reference name must match the Android keystore you add in
+        # Codemagic  →  Teams / User settings  →  Code signing identities  →  Android keystores.
+        - hie_upload_keystore
+      vars:
+        node: 20
+    scripts:
+      - name: Prepare web assets
+        script: |
+          mkdir -p www
+          cp index.html www/index.html
+          cp aeeg-patterns.jpg www/aeeg-patterns.jpg 2>/dev/null || echo "aeeg-patterns.jpg not in repo yet; app will fall back to the remote figure."
+      - name: Install npm dependencies
+        script: npm install
+      - name: Generate the Android project
+        script: |
+          npx cap add android || true
+          npx cap sync android
+      - name: Set version code and name
+        script: |
+          cd android
+          sed -i.bak "s/versionCode [0-9]*/versionCode $BUILD_NUMBER/" app/build.gradle
+          sed -i.bak "s/versionName \"[^\"]*\"/versionName \"2.0\"/" app/build.gradle
+      - name: Build the release AAB
+        script: |
+          cd android
+          ./gradlew bundleRelease
+    artifacts:
+      - android/app/build/outputs/**/*.aab
+      - android/app/build/outputs/**/mapping.txt
