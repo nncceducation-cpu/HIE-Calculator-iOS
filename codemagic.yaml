@@ -89,6 +89,10 @@ workflows:
         script: |
           npx cap add android || true
           npx cap sync android
+          # Codemagic's android_signing exports CM_KEYSTORE_* env vars but the
+          # Capacitor-generated build.gradle has no signingConfig, so the AAB
+          # comes out unsigned. Patch build.gradle to sign the release build.
+          python3 sign-patch.py
       - name: Set version code and name
         script: |
           cd android
